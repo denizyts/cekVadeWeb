@@ -5,7 +5,6 @@
   box-sizing: border-box;
 }
 
-
 body {
   font-family: Arial, sans-serif;
   display: flex;
@@ -28,11 +27,25 @@ body {
   height: 90%; /* Adjust container height */
 }
 
+/* Add flex for logo and title */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+/* Logo styling */
+#logo {
+  width: 30px; /* Adjust logo size to make it smaller */
+  height: auto;
+  margin-right: 10px; /* Space between logo and title */
+}
+
 /* Heading */
 h1 {
   color: #8d3c3c;
-  margin-bottom: 20px;
-  size: 1px;
+  font-size: 1.5rem; /* Adjust font size for better readability */
 }
 
 /* Form styling */
@@ -91,7 +104,6 @@ button {
 #generatePDF:hover {
   background-color: #774a07; /* Darker green on hover */
 }
-
 
 button:disabled {
   background: #ccc;

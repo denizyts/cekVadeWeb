@@ -3,6 +3,9 @@ const resultDiv = document.getElementById("result");
 const dueDateInput = document.getElementById("dueDate");
 const addDateBtn = document.getElementById("addDate");
 const amountInput = document.getElementById("amount");
+const generatePDFBtn = document.getElementById("generatePDF");
+const image = document.getElementById("image");
+
 
 let dates = [];
 let amounts = [];
@@ -102,7 +105,8 @@ function calculateAverageMaturity() {
   const averageMaturityDate = new Date(referenceDate + averageDaysSinceReference * (1000 * 60 * 60 * 24));
 
   // Display the result
-  resultDiv.textContent = `Ortalama Vade Tarihi: ${formatDate(averageMaturityDate)}  \nToplam Tutar: ${totalAmount.toFixed(2)} TL`;
+  resultDiv.innerHTML = `Ortalama Vade Tarihi: ${formatDate(averageMaturityDate)}<br>\nToplam Tutar: ${totalAmount.toFixed(2)} TL`;
+
 }
 
 function checkDateValidity(date){
@@ -133,4 +137,68 @@ function currentDate(){
   const formattedDate = currentDate.toISOString().split("T")[0];
   return formattedDate;
 }
+
+
+
+// PDF oluşturma
+generatePDFBtn.addEventListener("click", () => {
+  if (dates.length === 0) {
+    alert("Lütfen önce çek ekleyin.");
+    return;
+  }
+
+  // Initialize jsPDF
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+
+  pdf.setFont("courier" );
+
+  // Add title
+  pdf.setFontSize(16);
+  pdf.text("Ortalama Vade", 80, 10);
+
+  // Add details for each check
+  pdf.setFontSize(12);
+  let yPosition = 20; // Y-coordinate for text
+  const pageHeight = pdf.internal.pageSize.height;
+
+  dates.forEach((date, index) => {
+
+    if (yPosition > pageHeight - 10) {
+      pdf.addPage(); // Add new page
+      yPosition = 10; // Reset Y-coordinate for the new page
+    }
+
+    pdf.text(
+      `${index + 1}. Vade: ${formatDate(date)} - Tutar: ${amounts[index].toFixed(2)} TL`,
+      10,
+      yPosition
+    );
+    yPosition += 10; // Move down for the next line
+  });
+
+  // Add summary (average maturity and total amount)
+  calculateAverageMaturity(); // Ensure calculation is up to date
+  const resultText = resultDiv.textContent;
+  const summaryLines = resultText.split("\n"); // Split multi-line summary
+
+  yPosition += 10; // Add some space
+  summaryLines.forEach((line) => {
+
+    if (yPosition > pageHeight - 10) {
+      pdf.addPage(); // Add new page
+      yPosition = 10; // Reset Y-coordinate for the new page
+    }
+
+    pdf.text(line, 10, yPosition);
+    yPosition += 5; // Move down for each line
+  });
+
+  // Save the PDF
+  pdf.save("cek_vade_hesaplama.pdf");
+});
+
+
+
+
 
