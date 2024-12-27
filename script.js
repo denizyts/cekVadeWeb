@@ -9,6 +9,12 @@ let amounts = [];
 
 // Tarihi ekleme
 addDateBtn.addEventListener("click", () => {
+  
+
+  if (amountInput.value === ""){
+    alert("Lütfen Tutar Giriniz");
+    return;
+  }
   const dueDate = dueDateInput.value;
   const amount = amountInput.value;
 
@@ -55,9 +61,7 @@ function deleteEntry(index) {
   // Re-display the updated list
   displayDatesAndAmounts();
 
- 
 }
-
 
 function formatDate(date) {
   const day = date.getDate().toString().padStart(2, '0'); // Ensure two digits for the day
@@ -65,8 +69,6 @@ function formatDate(date) {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 }
-
-
 
 // Ortalama vade hesaplama
 // Calculate the average maturity date
@@ -77,6 +79,8 @@ function calculateAverageMaturity() {
     resultDiv.textContent = "Lütfen Çek Ekleyin.";
     return;
   }
+
+  dueDateInput.value = currentDate();
 
   // Use today's date as the reference
   const referenceDate = new Date().getTime(); // Current date in milliseconds
@@ -107,5 +111,26 @@ function checkDateValidity(date){
     return false;
   }
   return true;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const dueDateInput = document.getElementById("dueDate");
+
+  // Get current date
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + 1);
+
+  // Format the date as yyyy-MM-dd
+  const formattedDate = currentDate.toISOString().split("T")[0];
+
+  // Set the initial value of the date input
+  dueDateInput.value = formattedDate;
+});
+
+function currentDate(){
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + 1);
+  const formattedDate = currentDate.toISOString().split("T")[0];
+  return formattedDate;
 }
 

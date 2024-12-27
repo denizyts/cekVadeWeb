@@ -76,7 +76,7 @@ button {
   cursor: pointer;
 }
 
-#shareButton {
+#generatePDF {
   width: 100%;
   padding: 10px 20px;
   border: none;
@@ -88,8 +88,8 @@ button {
   margin-top: 20px;
 }
 
-#shareButton:hover {
-  background-color: #128C7E; /* Darker green on hover */
+#generatePDF:hover {
+  background-color: #774a07; /* Darker green on hover */
 }
 
 
