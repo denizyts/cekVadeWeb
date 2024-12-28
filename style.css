@@ -73,7 +73,7 @@ input[type="text"] {
   width: calc(100% - 22px); /* Full width minus padding */
   padding: 10px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #030303;
   border-radius: 5px;
 }
 
@@ -83,7 +83,7 @@ button {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  background: #007bff;
+  background: #2db4ef;
   color: white;
   font-size: 16px;
   cursor: pointer;
@@ -94,15 +94,19 @@ button {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  background-color: #25D366; /* WhatsApp green */
-  color: white;
+  background-color: #0dc7ce; 
+  color: rgb(255, 255, 255);
   font-size: 16px;
   cursor: pointer;
   margin-top: 20px;
 }
 
 #generatePDF:hover {
-  background-color: #774a07; /* Darker green on hover */
+  background-color: #125d86; 
+}
+
+button:hover {
+  background: #0c7eaf;
 }
 
 button:disabled {

@@ -107,7 +107,9 @@ function calculateAverageMaturity() {
   const averageMaturityDate = new Date(referenceDate + averageDaysSinceReference * (1000 * 60 * 60 * 24));
 
   // Display the result
-  resultDiv.innerHTML = `Ortalama Vade Tarihi: ${formatDate(averageMaturityDate)}<br>\nToplam Tutar: ${formatFloatToAmount(totalAmount)} TL`;
+  resultDiv.innerHTML = `Ortalama Vade Tarihi: ${formatDate(averageMaturityDate)}
+  <br>Ortalama Vade: ${Math.round(averageDaysSinceReference)} Gün
+  <br>Toplam Tutar: ${formatFloatToAmount(totalAmount)} TL`;
 
 }
 
@@ -179,22 +181,23 @@ generatePDFBtn.addEventListener("click", () => {
     yPosition += 10; // Move down for the next line
   });
 
+  pdf.setFontSize(14);
+  pdf.setFont("courier");
+  pdf.text("---------------------------------------------------", 10, yPosition);
+  
   // Add summary (average maturity and total amount)
   calculateAverageMaturity(); // Ensure calculation is up to date
   const resultText = resultDiv.textContent;
-  const summaryLines = resultText.split("\n"); // Split multi-line summary
+  const summaryLines = resultText
 
   yPosition += 10; // Add some space
-  summaryLines.forEach((line) => {
 
-    if (yPosition > pageHeight - 10) {
-      pdf.addPage(); // Add new page
-      yPosition = 10; // Reset Y-coordinate for the new page
-    }
+  if (yPosition > pageHeight - 10) {
+    pdf.addPage(); // Add new page
+    yPosition = 10; // Reset Y-coordinate for the new page
+  }
+  pdf.text(summaryLines, 10, yPosition);
 
-    pdf.text(line, 10, yPosition);
-    yPosition += 5; // Move down for each line
-  });
 
   // Save the PDF
   pdf.save("cek_vade_hesaplama.pdf");
