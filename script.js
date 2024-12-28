@@ -14,12 +14,14 @@ let amounts = [];
 addDateBtn.addEventListener("click", () => {
   
 
-  if (amountInput.value === ""){
+  if (amountInput.value === "" || amountInput.value === "0" || amountInput.value[0] === "0" || amountInput.value === ","){
     alert("Lütfen Tutar Giriniz");
     return;
   }
+
   const dueDate = dueDateInput.value;
-  const amount = amountInput.value;
+  const amount = formatAmountToFloat(amountInput.value);
+
 
   if (checkDateValidity(new Date(dueDate).getTime()) === false){
     alert("Geçmiş Tarih Ekleyemezsiniz");
@@ -40,7 +42,7 @@ function displayDatesAndAmounts() {
   datesContainer.innerHTML = dates
     .map((date, index) => `
       <div class="date-item">
-        ${index + 1}. Vade: ${formatDate(date)} - Tutar: ${amounts[index].toFixed(2)} TL
+        ${index + 1}. Vade: ${formatDate(date)} - Tutar: ${formatFloatToAmount(amounts[index])} TL
         <button class="delete-btn" data-index="${index}">Sil</button>
       </div>
     `)
@@ -105,7 +107,7 @@ function calculateAverageMaturity() {
   const averageMaturityDate = new Date(referenceDate + averageDaysSinceReference * (1000 * 60 * 60 * 24));
 
   // Display the result
-  resultDiv.innerHTML = `Ortalama Vade Tarihi: ${formatDate(averageMaturityDate)}<br>\nToplam Tutar: ${totalAmount.toFixed(2)} TL`;
+  resultDiv.innerHTML = `Ortalama Vade Tarihi: ${formatDate(averageMaturityDate)}<br>\nToplam Tutar: ${formatFloatToAmount(totalAmount)} TL`;
 
 }
 
@@ -170,7 +172,7 @@ generatePDFBtn.addEventListener("click", () => {
     }
 
     pdf.text(
-      `${index + 1}. Vade: ${formatDate(date)} - Tutar: ${amounts[index].toFixed(2)} TL`,
+      `${index + 1}. Vade: ${formatDate(date)} - Tutar: ${formatFloatToAmount(amounts[index])} TL`,
       10,
       yPosition
     );
@@ -199,6 +201,56 @@ generatePDFBtn.addEventListener("click", () => {
 });
 
 
+document.getElementById("amount").addEventListener("input", function (event) {
+  let input = event.target;
+  let value = input.value;
 
+  // Remove invalid characters (anything except digits and commas)
+  value = value.replace(/[^0-9,]/g, "");
+
+  // Handle comma for floating point
+  let parts = value.split(",");
+
+  if (parts.length > 2) {
+      // If there are multiple commas, keep the first part and the first decimal part
+      value = parts[0] + "," + parts[1];
+  }
+
+  // Format the integer part with dots as thousand separators
+  let integerPart = parts[0];
+  integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+  // Reassemble the value
+  if (parts.length > 1) {
+      value = integerPart + "," + parts[1];
+  } else {
+      value = integerPart;
+  }
+
+  // Set the formatted value back to the input
+  input.value = value;
+});
+
+function formatAmountToFloat(text) {
+  if (!text) return 0;
+  // Replace all dots (thousand separators) and then replace the comma (decimal separator) with a dot
+  const normalized = text.replace(/\./g, "").replace(",", ".");
+  return parseFloat(normalized) || 0;
+}
+
+function formatFloatToAmount(float) {
+  if (isNaN(float)) return "0,00";
+
+  // Convert the float to a string with two decimal places
+  const [integerPart, decimalPart] = float
+    .toFixed(2)
+    .split("."); // Separate integer and decimal parts
+
+  // Add thousand separators to the integer part
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+  // Combine the integer and decimal parts with a comma
+  return `${formattedInteger},${decimalPart}`;
+}
 
 

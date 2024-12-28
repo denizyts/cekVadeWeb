@@ -69,7 +69,7 @@ label {
 }
 
 input[type="date"],
-input[type="number"] {
+input[type="text"] {
   width: calc(100% - 22px); /* Full width minus padding */
   padding: 10px;
   margin-bottom: 15px;
